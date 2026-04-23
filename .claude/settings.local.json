@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npm start *)",
+      "Bash(gh auth *)",
+      "Bash(git --version)",
+      "Bash(winget install *)",
+      "Bash(refreshenv)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
+      "Bash(gh --version)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(gh repo *)"
+    ]
+  }
+}

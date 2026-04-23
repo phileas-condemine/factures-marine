@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/factures-marine/static/css/main.cfea8380.css",
+    "main.js": "/factures-marine/static/js/main.46d17c07.js",
+    "static/js/239.c49d5f97.chunk.js": "/factures-marine/static/js/239.c49d5f97.chunk.js",
+    "static/js/213.0f4e0812.chunk.js": "/factures-marine/static/js/213.0f4e0812.chunk.js",
+    "static/js/732.84ef33c0.chunk.js": "/factures-marine/static/js/732.84ef33c0.chunk.js",
+    "index.html": "/factures-marine/index.html",
+    "main.cfea8380.css.map": "/factures-marine/static/css/main.cfea8380.css.map",
+    "main.46d17c07.js.map": "/factures-marine/static/js/main.46d17c07.js.map",
+    "239.c49d5f97.chunk.js.map": "/factures-marine/static/js/239.c49d5f97.chunk.js.map",
+    "213.0f4e0812.chunk.js.map": "/factures-marine/static/js/213.0f4e0812.chunk.js.map",
+    "732.84ef33c0.chunk.js.map": "/factures-marine/static/js/732.84ef33c0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cfea8380.css",
+    "static/js/main.46d17c07.js"
+  ]
+}
