@@ -49,6 +49,11 @@ export function genererPDF({ salle, moisVal, dateFac, numFac, lignes }) {
   doc.setTextColor(80, 80, 80);
   const clientY = 34 + clientLines.length * 5.5;
   config.adresse.forEach((l, i) => doc.text(l, cx, clientY + i * 5));
+  if (config.siret) {
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
+    doc.text(`SIRET : ${config.siret}`, cx, clientY + config.adresse.length * 5 + 2);
+  }
 
   // Séparateur
   doc.setDrawColor(210, 210, 210);

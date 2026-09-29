@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import { SALLES, PRESTATAIRE, genererJours, dernierJourMoisPrecedent } from './data';
+import { SALLES, PRESTATAIRE, FR_JOURS, genererJours, dernierJourMoisPrecedent } from './data';
 import { genererPDF } from './pdf';
 
 export default function App() {
@@ -12,6 +12,9 @@ export default function App() {
   const [numFac,      setNumFac]      = useState(defaults.numFacture);
   const [lignes,      setLignes]      = useState([]);
   const [supprimees,  setSupprimees]  = useState(new Set());
+  const [nouvDate,    setNouvDate]    = useState('');
+  const [nouvHeure,   setNouvHeure]   = useState('');
+  const [nouvMontant, setNouvMontant] = useState('');
 
   // Regénérer le calendrier quand salle ou mois change
   useEffect(() => {
@@ -22,19 +25,42 @@ export default function App() {
     setSupprimees(new Set());
   }, [salle, moisVal]);
 
-  const toggleLigne = useCallback((date) => {
+  const toggleLigne = useCallback((id) => {
     setSupprimees(prev => {
       const next = new Set(prev);
-      next.has(date) ? next.delete(date) : next.add(date);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-    setLignes(prev => prev.map(r => r.date === date ? { ...r, supprimee: !r.supprimee } : r));
+    setLignes(prev => prev.map(r => r.id === id ? { ...r, supprimee: !r.supprimee } : r));
   }, []);
 
   const restaurerTout = useCallback(() => {
     setSupprimees(new Set());
     setLignes(prev => prev.map(r => ({ ...r, supprimee: false })));
   }, []);
+
+  const ajouterLigne = useCallback(() => {
+    const montant = parseFloat(nouvMontant.replace(',', '.'));
+    if (!nouvDate || !nouvHeure.trim() || Number.isNaN(montant)) return;
+
+    const [annee, mois, jour] = nouvDate.split('-').map(Number);
+    const dateObj = new Date(annee, mois - 1, jour);
+
+    const nouvelle = {
+      id:      `manuel-${nouvDate}-${Date.now()}`,
+      jour:    FR_JOURS[dateObj.getDay()],
+      date:    `${String(jour).padStart(2,'0')}/${String(mois).padStart(2,'0')}/${annee}`,
+      dateISO: nouvDate,
+      nb:      nouvHeure.trim(),
+      paie:    montant,
+      supprimee: false,
+    };
+
+    setLignes(prev => [...prev, nouvelle].sort((a, b) => a.dateISO.localeCompare(b.dateISO)));
+    setNouvDate('');
+    setNouvHeure('');
+    setNouvMontant('');
+  }, [nouvDate, nouvHeure, nouvMontant]);
 
   const actives = lignes.filter(r => !r.supprimee);
   const total   = actives.reduce((s, r) => s + r.paie, 0);
@@ -89,6 +115,7 @@ export default function App() {
           {config.adresse.length > 0 && (
             <div className="card-addr">{config.adresse.join('\n')}</div>
           )}
+          {config.siret && <span className="badge-siret">SIRET {config.siret}</span>}
         </div>
       </div>
 
@@ -100,9 +127,9 @@ export default function App() {
         <div className="pills">
           {supprimees.size === 0
             ? <span className="pills-empty">Cliquez sur une ligne pour supprimer un jour</span>
-            : [...supprimees].sort().map(d => (
-                <span key={d} className="pill" onClick={() => toggleLigne(d)}>
-                  ✕ {d}
+            : lignes.filter(r => r.supprimee).map(r => (
+                <span key={r.id} className="pill" onClick={() => toggleLigne(r.id)}>
+                  ✕ {r.date}
                 </span>
               ))
           }
@@ -125,9 +152,9 @@ export default function App() {
           <tbody>
             {lignes.map(r => (
               <tr
-                key={r.date}
+                key={r.id}
                 className={r.supprimee ? 'row-removed' : ''}
-                onClick={() => toggleLigne(r.date)}
+                onClick={() => toggleLigne(r.id)}
               >
                 <td className="col-jour">{r.jour}</td>
                 <td>{r.date}</td>
@@ -145,6 +172,23 @@ export default function App() {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Ajouter une intervention manuelle */}
+      <div className="add-row">
+        <div className="field">
+          <label>Date</label>
+          <input type="date" value={nouvDate} onChange={e => setNouvDate(e.target.value)} />
+        </div>
+        <div className="field">
+          <label>Heure</label>
+          <input type="text" value={nouvHeure} onChange={e => setNouvHeure(e.target.value)} placeholder="ex: 45 min" />
+        </div>
+        <div className="field">
+          <label>Montant TTC</label>
+          <input type="text" inputMode="decimal" value={nouvMontant} onChange={e => setNouvMontant(e.target.value)} placeholder="ex: 70" />
+        </div>
+        <button className="btn btn-secondary" onClick={ajouterLigne}>+ Ajouter</button>
       </div>
 
       {/* Actions */}
