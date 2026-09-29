@@ -14,7 +14,7 @@ export const SALLES = {
     client: "ASCPS",
     adresse: [],
     jours: [
-      { jour: "vendredi", nb: "1 h", paie: 80 },
+      { jour: "vendredi", nb: "1 h", paie: 83 },
     ],
   },
   senat_stretch: {
@@ -22,9 +22,19 @@ export const SALLES = {
     client: "ASCPS",
     adresse: [],
     jours: [
-      { jour: "mardi",    nb: "1 h", paie: 80 },
-      { jour: "jeudi",    nb: "1 h", paie: 80 },
-      { jour: "vendredi", nb: "1 h", paie: 80 },
+      { jour: "mardi",    nb: "1 h", paie: 83 },
+      { jour: "jeudi",    nb: "1 h", paie: 83 },
+      { jour: "vendredi", nb: "1 h", paie: 83 },
+    ],
+  },
+  leva_flow_paris: {
+    label: "Leva Flow Paris",
+    client: "LEVA FLOW PARIS - L&O FLOW",
+    adresse: ["163 rue de Sèvres", "75015 PARIS"],
+    siret: "993 393 479 00015",
+    jours: [
+      { jour: "mardi",    nb: "1 h", paie: 60 },
+      { jour: "vendredi", nb: "1 h", paie: 60 },
     ],
   },
 };
@@ -48,9 +58,12 @@ export function genererJours(salle, annee, mois) {
     const nomJour = FR_JOURS[date.getDay()];
     const match  = config.jours.find(j => j.jour === nomJour);
     if (match) {
+      const dateISO = `${annee}-${String(mois).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       rows.push({
+        id:   dateISO,
         jour: nomJour,
         date: `${String(d).padStart(2,'0')}/${String(mois).padStart(2,'0')}/${annee}`,
+        dateISO,
         nb:   match.nb,
         paie: match.paie,
       });
