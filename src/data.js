@@ -33,6 +33,7 @@ export const SALLES = {
     adresse: ["163 rue de Sèvres", "75015 PARIS"],
     siret: "993 393 479 00015",
     jours: [
+      { jour: "lundi",    nb: "2 h", paie: 120 },
       { jour: "mardi",    nb: "1 h", paie: 60 },
       { jour: "vendredi", nb: "1 h", paie: 60 },
     ],
